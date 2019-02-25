@@ -12,8 +12,8 @@ public class Epos {
     public static ArrayList<Double> transactionList = new ArrayList<>();
     public static ArrayList<Double> priceList = new ArrayList<>();
     public static ArrayList<Double> checkoutList = new ArrayList<>();
-    
-    // Convenience method
+
+// Convenience method
     public static void incrementCustomersServed() { customersServed++; }
     
     public static void setCustomersServed(int num) { customersServed = num; }

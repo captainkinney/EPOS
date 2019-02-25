@@ -18,8 +18,8 @@ import javax.swing.ImageIcon;
 
 public final class View extends javax.swing.JFrame {
 
-    public static User user;
-    public static Epos epos;
+    public static User user = new User();
+    public static Epos epos = new Epos();
     
     public static DefaultListModel listModel = new DefaultListModel();
     public static double cost = 0.0;
@@ -49,7 +49,6 @@ public final class View extends javax.swing.JFrame {
         txtUserUsername = new javax.swing.JTextField();
         jLabel31 = new javax.swing.JLabel();
         txtUserPermission = new javax.swing.JTextField();
-        btnLogOut = new javax.swing.JButton();
         pnlSales = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -162,13 +161,6 @@ public final class View extends javax.swing.JFrame {
 
         txtUserPermission.setEditable(false);
 
-        btnLogOut.setText("Log Out");
-        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLogOutActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnlUserLayout = new javax.swing.GroupLayout(pnlUser);
         pnlUser.setLayout(pnlUserLayout);
         pnlUserLayout.setHorizontalGroup(
@@ -176,21 +168,18 @@ public final class View extends javax.swing.JFrame {
             .addGroup(pnlUserLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlUserLayout.createSequentialGroup()
-                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel29)
-                            .addComponent(jLabel31))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtUserPermission, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtUserFirstName, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                            .addComponent(txtUserSecondName)
-                            .addComponent(txtUserID)
-                            .addComponent(txtUserUsername)))
-                    .addComponent(btnLogOut))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel29)
+                    .addComponent(jLabel31))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtUserPermission, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUserFirstName, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                    .addComponent(txtUserSecondName)
+                    .addComponent(txtUserID)
+                    .addComponent(txtUserUsername))
                 .addContainerGap(671, Short.MAX_VALUE))
         );
 
@@ -219,9 +208,7 @@ public final class View extends javax.swing.JFrame {
                 .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel31)
                     .addComponent(txtUserPermission, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 316, Short.MAX_VALUE)
-                .addComponent(btnLogOut)
-                .addContainerGap())
+                .addContainerGap(350, Short.MAX_VALUE))
         );
 
         tabMain.addTab("User Details", pnlUser);
@@ -1020,10 +1007,6 @@ public final class View extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnRestartActionPerformed
 
-    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
-        login();
-    }//GEN-LAST:event_btnLogOutActionPerformed
-
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1058,9 +1041,6 @@ public final class View extends javax.swing.JFrame {
     
     public static User loginDialog()
     {
-        user = new User();
-        epos = new Epos();
-        
         JLabel loginLabel = new JLabel("Username:");
         JTextField loginField = new JTextField();
         JLabel passwordLabel = new JLabel("Password:");
@@ -1265,7 +1245,6 @@ public final class View extends javax.swing.JFrame {
     private javax.swing.JButton btnCreateClear;
     private javax.swing.JButton btnDeleteProduct;
     private javax.swing.JButton btnDeleteUser;
-    private javax.swing.JButton btnLogOut;
     private javax.swing.JButton btnRemoveLastItem;
     private javax.swing.JButton btnRestart;
     private javax.swing.JButton btnUpdate;

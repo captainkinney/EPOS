@@ -167,7 +167,5 @@ public final class UserController extends Controller {
         {
             System.out.println("in deleteUser(): " + e);
         }
-    }
-    
-    
+    } 
 }
