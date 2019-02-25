@@ -19,7 +19,7 @@ import javax.swing.ImageIcon;
 public final class View extends javax.swing.JFrame {
 
     public static User user;
-    public static Epos epos = new Epos();
+    public static Epos epos;
     
     public static DefaultListModel listModel = new DefaultListModel();
     public static double cost = 0.0;
@@ -1059,6 +1059,7 @@ public final class View extends javax.swing.JFrame {
     public static User loginDialog()
     {
         user = new User();
+        epos = new Epos();
         
         JLabel loginLabel = new JLabel("Username:");
         JTextField loginField = new JTextField();
@@ -1106,14 +1107,14 @@ public final class View extends javax.swing.JFrame {
             tabMain.remove(pnlManagerTools);
         }
         
-        updateRecords();
-        updateManagerTools();
-        
         txtUserFirstName.setText(user.getFirstName());
         txtUserSecondName.setText(user.getSecondName());
         txtUserID.setText(user.getID());
         txtUserUsername.setText(user.getUsername());
         txtUserPermission.setText(user.getPermission());
+        
+        updateRecords();
+        updateManagerTools();
         
         this.setVisible(true);
     }
