@@ -1,11 +1,17 @@
 package epos;
 
+import java.util.ArrayList;
+
 public class Epos {
     private static int customersServed = 0;
     private static double averageSale = 0.00;
     private static double minimumSale = 0.00;
     private static double maximumSale = 0.00;
     private static double totalTakings = 0.00;
+    
+    public static ArrayList<Double> transactionList = new ArrayList<>();
+    public static ArrayList<Double> priceList = new ArrayList<>();
+    public static ArrayList<Double> checkoutList = new ArrayList<>();
     
     // Convenience method
     public static void incrementCustomersServed() { customersServed++; }
@@ -14,11 +20,12 @@ public class Epos {
     public static void setAverageSale(double num) { averageSale = num; }
     public static void setMinimumSale(double num) { minimumSale = num; }
     public static void setMaximumSale(double num) { maximumSale = num; }
-    public static void setTotal(double num) { totalTakings = 0; }
+    public static void setTotalTakings(double num) { totalTakings = num; }
     
     public int getCustomersServed() { return customersServed; }
     public double getAverageSale() { return averageSale; }
     public double getMinimumSale() { return minimumSale; }
     public double getMaximumSale() { return maximumSale; }
     public double getTotalTakings() { return totalTakings; }
+
 }

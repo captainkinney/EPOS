@@ -9,9 +9,6 @@
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
-  <Events>
-    <EventHandler event="windowOpened" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowOpened"/>
-  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -64,19 +61,24 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel29" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel31" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtUserPermission" linkSize="3" min="-2" pref="112" max="-2" attributes="0"/>
-                          <Component id="txtUserFirstName" linkSize="3" pref="96" max="32767" attributes="0"/>
-                          <Component id="txtUserSecondName" linkSize="3" max="32767" attributes="0"/>
-                          <Component id="txtUserID" linkSize="3" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txtUserUsername" linkSize="3" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel29" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel31" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="txtUserPermission" linkSize="3" min="-2" pref="112" max="-2" attributes="0"/>
+                                  <Component id="txtUserFirstName" linkSize="3" pref="96" max="32767" attributes="0"/>
+                                  <Component id="txtUserSecondName" linkSize="3" max="32767" attributes="0"/>
+                                  <Component id="txtUserID" linkSize="3" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="txtUserUsername" linkSize="3" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="btnLogOut" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="671" max="32767" attributes="0"/>
                   </Group>
@@ -110,7 +112,9 @@
                           <Component id="jLabel31" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtUserPermission" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="350" max="32767" attributes="0"/>
+                      <EmptySpace pref="316" max="32767" attributes="0"/>
+                      <Component id="btnLogOut" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -166,6 +170,14 @@
                 <Property name="editable" type="boolean" value="false"/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JButton" name="btnLogOut">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Log Out"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLogOutActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="pnlSales">
@@ -197,7 +209,7 @@
                           <Component id="txtTotal" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
                           <Component id="txtMaximum" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="665" max="32767" attributes="0"/>
+                      <EmptySpace pref="656" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -211,6 +223,11 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtTotal" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtAverageSale" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -218,11 +235,6 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtMinimumSale" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtTotal" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -252,7 +264,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Total Sale Takings:"/>
+                <Property name="text" type="java.lang.String" value="Total Session Takings:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
