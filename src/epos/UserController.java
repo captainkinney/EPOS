@@ -69,7 +69,7 @@ public final class UserController extends Controller {
         return login;
     }
     
-    public User retrieveDetails(String username)
+    public static User retrieveDetails(String username)
     {
         User user = new User();
         try
@@ -91,7 +91,7 @@ public final class UserController extends Controller {
         return user;
     }
     
-    public void insertUser(User user)
+    public static void insertUser(User user)
     {
         try
         {
@@ -125,7 +125,7 @@ public final class UserController extends Controller {
         }
     }
     
-    public void updateUser(String username, User user)
+    public static void updateUser(String username, User user)
     {
         String firstName = user.getFirstName();
         String secondName = user.getSecondName();
@@ -154,7 +154,7 @@ public final class UserController extends Controller {
         
     }
     
-    public void deleteUser(String username)
+    public static void deleteUser(String username)
     {
         try
         {
@@ -168,4 +168,6 @@ public final class UserController extends Controller {
             System.out.println("in deleteUser(): " + e);
         }
     }
+    
+    
 }

@@ -1,27 +1,41 @@
 package epos;
 
 import java.util.ArrayList;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.JButton;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-public class View extends javax.swing.JFrame {
+
+public final class View extends javax.swing.JFrame {
 
     public static User user;
-    public static UserController userController = new UserController();
-    
     public static Epos epos = new Epos();
+    
+    public static DefaultListModel listModel = new DefaultListModel();
+    public static ArrayList<Product> checkoutList = new ArrayList<>();
+    public static ArrayList<Double> transactionList = new ArrayList<>();
+    public static ArrayList<Double> priceList = new ArrayList<>();
+    public static double cost = 0.0;
+    
+    // Used to determine value of the price of the last item in the order.
+    public static double lastCost = 0.0;
+    
     public static ProductController productController = new ProductController();
+    public static UserController userController = new UserController();
     
     public View() {
         initComponents();
+        updateEPOS();
     }
 
     @SuppressWarnings("unchecked")
@@ -67,6 +81,8 @@ public class View extends javax.swing.JFrame {
         txtReadUsername = new javax.swing.JTextField();
         jLabel32 = new javax.swing.JLabel();
         txtReadPermission = new javax.swing.JTextField();
+        jLabel35 = new javax.swing.JLabel();
+        txtReadTakings = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -115,14 +131,17 @@ public class View extends javax.swing.JFrame {
         btnAddProduct = new javax.swing.JButton();
         btnRestart = new javax.swing.JButton();
         pnlEPOS = new javax.swing.JPanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
         jLabel28 = new javax.swing.JLabel();
         txtOrderCost = new javax.swing.JTextField();
         jScrollPane6 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        listOrder = new javax.swing.JList<>();
         btnCheckout = new javax.swing.JButton();
         btnRemoveLastItem = new javax.swing.JButton();
         btnCancelOrder = new javax.swing.JButton();
+        scrollButtons = new javax.swing.JScrollPane();
+        pnlButtons = new javax.swing.JPanel();
+        spnQuantity = new javax.swing.JSpinner();
+        jLabel36 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("EPOS System");
@@ -159,24 +178,23 @@ public class View extends javax.swing.JFrame {
             .addGroup(pnlUserLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlUserLayout.createSequentialGroup()
-                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel29))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtUserFirstName, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                            .addComponent(txtUserSecondName)
-                            .addComponent(txtUserID)
-                            .addComponent(txtUserUsername)))
-                    .addGroup(pnlUserLayout.createSequentialGroup()
-                        .addComponent(jLabel31)
-                        .addGap(25, 25, 25)
-                        .addComponent(txtUserPermission)))
-                .addContainerGap(365, Short.MAX_VALUE))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel29)
+                    .addComponent(jLabel31))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtUserPermission, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUserFirstName, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                    .addComponent(txtUserSecondName)
+                    .addComponent(txtUserID)
+                    .addComponent(txtUserUsername))
+                .addContainerGap(671, Short.MAX_VALUE))
         );
+
+        pnlUserLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtUserFirstName, txtUserID, txtUserPermission, txtUserSecondName, txtUserUsername});
+
         pnlUserLayout.setVerticalGroup(
             pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlUserLayout.createSequentialGroup()
@@ -200,7 +218,7 @@ public class View extends javax.swing.JFrame {
                 .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel31)
                     .addComponent(txtUserPermission, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(251, Short.MAX_VALUE))
+                .addContainerGap(350, Short.MAX_VALUE))
         );
 
         tabMain.addTab("User Details", pnlUser);
@@ -237,14 +255,14 @@ public class View extends javax.swing.JFrame {
                     .addComponent(jLabel8)
                     .addComponent(jLabel7)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlSalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtMaximum, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtMinimumSale, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCustomersServed, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtAverageSale, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCustomersServed, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(251, Short.MAX_VALUE))
+                    .addComponent(txtMinimumSale, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtMaximum, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(665, Short.MAX_VALUE))
         );
         pnlSalesLayout.setVerticalGroup(
             pnlSalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,7 +287,7 @@ public class View extends javax.swing.JFrame {
                 .addGroup(pnlSalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(txtMaximum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(251, Short.MAX_VALUE))
+                .addContainerGap(350, Short.MAX_VALUE))
         );
 
         tabMain.addTab("Sales Records", pnlSales);
@@ -303,6 +321,10 @@ public class View extends javax.swing.JFrame {
 
         txtReadPermission.setEditable(false);
 
+        jLabel35.setText("Total Takings:");
+
+        txtReadTakings.setEditable(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -321,13 +343,18 @@ public class View extends javax.swing.JFrame {
                             .addComponent(jLabel32))
                         .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtReadPermission, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtReadUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtReadID, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtReadFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(69, 69, 69)
+                                .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtReadTakings, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txtReadSecondName, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtReadFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtReadID, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtReadUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtReadPermission, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel9))
-                .addContainerGap(215, Short.MAX_VALUE))
+                .addContainerGap(291, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -336,11 +363,13 @@ public class View extends javax.swing.JFrame {
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel10)
-                            .addComponent(txtReadFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtReadFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel35)
+                            .addComponent(txtReadTakings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel11)
@@ -408,12 +437,12 @@ public class View extends javax.swing.JFrame {
                             .addComponent(txtCreatePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCreateUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCreateSecondName, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCreateFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboCreatePermission, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(cboCreatePermission, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCreateFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(btnCreateClear, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCreate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(323, 323, 323))
+                .addGap(237, 237, 237))
         );
 
         jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cboCreatePermission, txtCreateFirstName, txtCreatePassword, txtCreateSecondName, txtCreateUsername});
@@ -445,7 +474,7 @@ public class View extends javax.swing.JFrame {
                 .addComponent(btnCreate)
                 .addGap(18, 18, 18)
                 .addComponent(btnCreateClear)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
 
         pnlManageEPOS.addTab("Create Users", jPanel2);
@@ -517,7 +546,7 @@ public class View extends javax.swing.JFrame {
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel18)
@@ -568,7 +597,7 @@ public class View extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnDeleteUser))
                     .addComponent(jLabel22))
-                .addContainerGap(319, Short.MAX_VALUE))
+                .addContainerGap(641, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -581,7 +610,7 @@ public class View extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel22)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -624,37 +653,43 @@ public class View extends javax.swing.JFrame {
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addComponent(btnDeleteProduct, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))
                     .addComponent(jLabel23))
+                .addGap(324, 324, 324)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtProductImage, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAddProduct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(161, 161, 161)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAddProduct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel26)
-                                    .addComponent(jLabel25)
-                                    .addComponent(jLabel27)
-                                    .addComponent(jLabel24))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtProductName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtProductPrice, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addComponent(jLabel27)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                        .addComponent(txtProductPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel26)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtProductImage, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel24)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel25)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(5, 5, 5))
         );
+
+        jPanel5Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtProductImage, txtProductName, txtProductPrice});
+
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel23)
-                    .addComponent(jLabel24))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel23)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnDeleteProduct))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel24)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel25)
                             .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -666,17 +701,19 @@ public class View extends javax.swing.JFrame {
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel27)
                             .addComponent(txtProductPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDeleteProduct)
-                    .addComponent(btnAddProduct))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAddProduct)))
                 .addContainerGap())
         );
 
         pnlManageEPOS.addTab("Manage EPOS", jPanel5);
 
         btnRestart.setText("Restart System");
+        btnRestart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestartActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlManagerToolsLayout = new javax.swing.GroupLayout(pnlManagerTools);
         pnlManagerTools.setLayout(pnlManagerToolsLayout);
@@ -706,19 +743,52 @@ public class View extends javax.swing.JFrame {
         jLabel28.setText("Total Order Cost:");
 
         txtOrderCost.setEditable(false);
+        txtOrderCost.setText("£0.00");
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane6.setViewportView(jList1);
+        jScrollPane6.setViewportView(listOrder);
 
         btnCheckout.setText("Checkout Order");
+        btnCheckout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCheckoutActionPerformed(evt);
+            }
+        });
 
         btnRemoveLastItem.setText("Remove Last Item");
+        btnRemoveLastItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveLastItemActionPerformed(evt);
+            }
+        });
 
         btnCancelOrder.setText("Cancel Order");
+        btnCancelOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelOrderActionPerformed(evt);
+            }
+        });
+
+        scrollButtons.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollButtons.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        pnlButtons.setPreferredSize(new java.awt.Dimension(428, 1000));
+
+        javax.swing.GroupLayout pnlButtonsLayout = new javax.swing.GroupLayout(pnlButtons);
+        pnlButtons.setLayout(pnlButtonsLayout);
+        pnlButtonsLayout.setHorizontalGroup(
+            pnlButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 667, Short.MAX_VALUE)
+        );
+        pnlButtonsLayout.setVerticalGroup(
+            pnlButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1000, Short.MAX_VALUE)
+        );
+
+        scrollButtons.setViewportView(pnlButtons);
+
+        spnQuantity.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+
+        jLabel36.setText("Quantity:");
 
         javax.swing.GroupLayout pnlEPOSLayout = new javax.swing.GroupLayout(pnlEPOS);
         pnlEPOS.setLayout(pnlEPOSLayout);
@@ -726,19 +796,21 @@ public class View extends javax.swing.JFrame {
             pnlEPOSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlEPOSLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                .addComponent(scrollButtons, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlEPOSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlEPOSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(pnlEPOSLayout.createSequentialGroup()
-                            .addComponent(jLabel28)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtOrderCost, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane6))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlEPOSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(btnCancelOrder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRemoveLastItem, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                        .addComponent(btnCheckout, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(btnCheckout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnRemoveLastItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCancelOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlEPOSLayout.createSequentialGroup()
+                        .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtOrderCost, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlEPOSLayout.createSequentialGroup()
+                        .addComponent(jLabel36, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spnQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pnlEPOSLayout.setVerticalGroup(
@@ -746,19 +818,23 @@ public class View extends javax.swing.JFrame {
             .addGroup(pnlEPOSLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlEPOSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlEPOSLayout.createSequentialGroup()
+                    .addGroup(pnlEPOSLayout.createSequentialGroup()
                         .addGroup(pnlEPOSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel28)
                             .addComponent(txtOrderCost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlEPOSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(spnQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel36))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8)
                         .addComponent(btnRemoveLastItem, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane5))
+                    .addComponent(scrollButtons, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -803,13 +879,20 @@ public class View extends javax.swing.JFrame {
 
     private void listManagerReadValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listManagerReadValueChanged
         String username = listManagerRead.getSelectedValue();
-        User selectedUser = userController.retrieveDetails(username);
+        User selectedUser = UserController.retrieveDetails(username);
         
         txtReadFirstName.setText(selectedUser.getFirstName());
         txtReadSecondName.setText(selectedUser.getSecondName());
         txtReadID.setText(selectedUser.getID());
         txtReadUsername.setText(selectedUser.getUsername());
         txtReadPermission.setText(selectedUser.getPermission());
+        
+        double total = SalesController.retrieveTotal(user.getUsername());
+        
+        String stringTotal = (String) String.format("%.2f", total);
+        total = Double.parseDouble(stringTotal);
+        
+        txtReadTakings.setText("£" + String.valueOf(total));
     }//GEN-LAST:event_listManagerReadValueChanged
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
@@ -820,38 +903,52 @@ public class View extends javax.swing.JFrame {
         User.setUsername(txtCreateUsername.getText());
         User.setPermission((String)cboCreatePermission.getSelectedItem());
         
-        userController.insertUser(newUser);
+        UserController.insertUser(newUser);
         updateManagerTools();
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void btnAddProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProductActionPerformed
         Product product = new Product();
         
-        product.setName(txtProductName.getText());
-        product.setImage(txtProductImage.getText());
-        product.setPrice(txtProductPrice.getText());
+        String name = txtProductName.getText();
+        String image = txtProductImage.getText();
+        String price = txtProductPrice.getText();
         
-        productController.insertProduct(product);   
+        product.setName(name);
+        product.setImage(image);
+        product.setPrice(price);
+        
+        ProductController.insertProduct(product);   
         updateManagerTools();
+        
+        txtProductName.setText("");
+        txtProductImage.setText("");
+        txtProductPrice.setText("");
     }//GEN-LAST:event_btnAddProductActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         String username = listManagerUpdate.getSelectedValue();
         User updateUser = new User();
         
-        updateUser.setFirstName(txtUpdateFirstName.getText());
-        updateUser.setSecondName(txtUpdateSecondName.getText());
-        updateUser.setPassword(txtUpdatePassword.getText());
-        updateUser.setUsername(txtUpdateUsername.getText());
-        updateUser.setPermission((String)cboUpdatePermission.getSelectedItem());
-        
-        userController.updateUser(username, updateUser);
+        String firstName = txtUpdateFirstName.getText();
+        String secondName = txtUpdateSecondName.getText();
+        String newUsername = txtUpdateUsername.getText();
+        String password = txtUpdatePassword.getText();
+        String permission = (String)cboUpdatePermission.getSelectedItem();
+       
+        updateUser.setFirstName(firstName);
+        updateUser.setSecondName(secondName);
+        updateUser.setPassword(password);
+        updateUser.setUsername(newUsername);
+        updateUser.setPermission(permission);
+
+        UserController.updateUser(username, updateUser);
         updateManagerTools();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void listManagerUpdateValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listManagerUpdateValueChanged
         String username = listManagerUpdate.getSelectedValue();
-        User selectedUser = userController.retrieveDetails(username);
+        User selectedUser = UserController.retrieveDetails(username);
         
         txtUpdateFirstName.setText(selectedUser.getFirstName());
         txtUpdateSecondName.setText(selectedUser.getSecondName());
@@ -870,7 +967,7 @@ public class View extends javax.swing.JFrame {
     private void btnDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteUserActionPerformed
         String username = listManagerDelete.getSelectedValue();
         
-        userController.deleteUser(username);
+        UserController.deleteUser(username);
         updateManagerTools();
     }//GEN-LAST:event_btnDeleteUserActionPerformed
 
@@ -881,6 +978,52 @@ public class View extends javax.swing.JFrame {
         txtCreatePassword.setText("");
         cboCreatePermission.setSelectedItem("User");
     }//GEN-LAST:event_btnCreateClearActionPerformed
+
+    private void btnCancelOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelOrderActionPerformed
+        cost = 0.00;
+        listOrder.setModel(new DefaultListModel());
+        lastCost = 0.0;
+    }//GEN-LAST:event_btnCancelOrderActionPerformed
+
+    private void btnRemoveLastItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveLastItemActionPerformed
+        try
+        {
+            cost -= priceList.get( priceList.size() -1);
+            
+            listModel.remove( listModel.size() - 1);
+            priceList.remove( priceList.size() -1);
+            
+            updateOrder();
+            
+        }
+        catch (IndexOutOfBoundsException e)
+        {
+            JOptionPane.showMessageDialog(null, "Error: No items in cart.");
+        }
+        
+    }//GEN-LAST:event_btnRemoveLastItemActionPerformed
+
+    private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
+        checkout();
+        JOptionPane.showMessageDialog(null, "Order complete.\n Total price: £" + String.format("%.2f", cost));
+        listModel.removeAllElements();
+        txtOrderCost.setText("£0.00");
+        cost = 0.00;
+    }//GEN-LAST:event_btnCheckoutActionPerformed
+
+    private void btnRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestartActionPerformed
+        JLabel confirm = new JLabel("Resetting the system will delete all sales records. Are you sure?");
+        Object[] guiElements = {confirm};
+        int choice = JOptionPane.showConfirmDialog(null, guiElements, "Reset System",
+                javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                javax.swing.JOptionPane.PLAIN_MESSAGE);
+        
+        if (choice == javax.swing.JOptionPane.OK_OPTION)
+        {
+            SalesController.resetSystem();
+            JOptionPane.showMessageDialog(null, "System Reset.");
+        }
+    }//GEN-LAST:event_btnRestartActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -932,7 +1075,7 @@ public class View extends javax.swing.JFrame {
             String username = loginField.getText().trim();
             String password = passwordField.getText().trim();
             
-            user = userController.retrieveDetails(username);
+            user = UserController.retrieveDetails(username);
             
             if (password.equals(user.getPassword()) )
             {
@@ -951,17 +1094,6 @@ public class View extends javax.swing.JFrame {
         return null;
     }
     
-    public static void foo()
-    {
-        /*
-        // Apply icon
-            String workingDir = System.getProperty("user.dir");
-            String filepath = workingDir + "\\Data\\imgs\\" + country_rs.getString("Image");
-            BufferedImage image = ImageIO.read(new File(filepath));
-            lbl_icon.setIcon(new ImageIcon(image));
-            txaTextArea.setText("Country: " + country + "\n" + "Capital: " + country_rs.getString("Capital"));
-            */
-    }
     public void updateRecords()
     {
         txtCustomersServed.setText(Integer.toString(epos.getCustomersServed()) );
@@ -973,7 +1105,7 @@ public class View extends javax.swing.JFrame {
     
     public void updateManagerTools()
     {
-        ArrayList<String> userList = userController.retrieveUsernames();
+        ArrayList<String> userList = UserController.retrieveUsernames();
         
         DefaultListModel listModel = new DefaultListModel();
         for (String member : userList)
@@ -984,7 +1116,7 @@ public class View extends javax.swing.JFrame {
         listManagerDelete.setModel(listModel);
         listManagerUpdate.setModel(listModel);
         
-        ArrayList<String> productList = ProductController.retrieveProducts();
+        ArrayList<String> productList = ProductController.retrieveProductNames();
         
         listModel = new DefaultListModel();
         for (String member: productList)
@@ -992,6 +1124,102 @@ public class View extends javax.swing.JFrame {
             listModel.addElement(member);
         }
         listProducts.setModel(listModel);
+        
+        updateEPOS();
+    }
+    
+    public void updateEPOS()
+    {
+        pnlButtons.removeAll();
+        
+        int x = 15;
+        int y = 15;
+        
+        String workingDir = System.getProperty("user.dir");
+        String filepath = workingDir + "\\Data\\imgs\\";
+        BufferedImage image;
+        ImageIcon icon = null;
+        
+        for (Product item : ProductController.retrieveProducts())
+        {
+            // Icon creation.
+            try
+            { 
+                image = ImageIO.read(new File(filepath + item.getImage()));
+                icon = new ImageIcon(image);
+            }
+            catch (IOException e) { System.out.println(e); }
+            
+            // Button creation
+            JButton button = new JButton();
+            
+            // ActionListener to add item to checkout list when pressed.
+            button.addActionListener(e -> EPOSButtonPressed(item));
+            
+            // Button configuration.
+            button.setSize(200, 100);
+            button.setIcon(icon);
+            double price = Double.parseDouble(item.getPrice());
+            button.setText(item.getName() + ", £" + String.format("%.2f", price));
+            
+            // Positioning
+            button.setLocation(x, y);
+            x += 215;
+            if (x == 660)
+            {
+                x = 15;
+                y += 125;
+            }
+            pnlButtons.add(button);
+        }
+    }
+    
+    public void EPOSButtonPressed(Product item)
+    {
+        int quantity = (int)spnQuantity.getValue();
+        double price;
+        if(quantity > 0)
+        {
+            listModel.addElement(item.getName() + " £" + item.getPrice() + " x" + String.valueOf(quantity));
+            price = Double.parseDouble(item.getPrice()) * quantity;
+            priceList.add(price);
+            cost += price;
+            
+            updateOrder();
+        }
+    }
+    
+    public void updateOrder()
+    {
+        txtOrderCost.setText("£" + String.format("%.2f", cost));
+        listOrder.setModel(listModel);
+    }
+    
+    public void checkout()
+    {
+        String numericalPrice = txtOrderCost.getText().substring(1);
+        transactionList.add( Double.parseDouble(numericalPrice) );
+        
+        double highest = transactionList.get(0);
+        double lowest = transactionList.get(0);
+        double total = 0.0;
+        double average = 0.0;
+        for (double member : transactionList)
+        {
+            if (member > highest) { highest = member; }
+            else if (member < lowest) { lowest = member; }
+            
+            total += member;
+            average = total / transactionList.size();
+        }
+        txtCustomersServed.setText(String.valueOf(transactionList.size()));
+        txtTotal.setText("£" + String.format("%.2f", total));
+        txtMaximum.setText("£" + String.format("%.2f", highest));
+        txtMinimumSale.setText("£" + String.format("%.2f", lowest));
+        txtAverageSale.setText("£" + String.format("%.2f", average));
+        
+        SalesController.submitSale(user, total);
+        updateManagerTools();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1035,13 +1263,14 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1051,17 +1280,20 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JList<String> listManagerDelete;
     private javax.swing.JList<String> listManagerRead;
     private javax.swing.JList<String> listManagerUpdate;
+    private javax.swing.JList<String> listOrder;
     private javax.swing.JList<String> listProducts;
+    private javax.swing.JPanel pnlButtons;
     private javax.swing.JPanel pnlEPOS;
     private javax.swing.JTabbedPane pnlManageEPOS;
     private javax.swing.JPanel pnlManagerTools;
     private javax.swing.JPanel pnlSales;
     private javax.swing.JPanel pnlUser;
+    private javax.swing.JScrollPane scrollButtons;
+    private javax.swing.JSpinner spnQuantity;
     private javax.swing.JTabbedPane tabMain;
     private javax.swing.JTextField txtAverageSale;
     private javax.swing.JTextField txtCreateFirstName;
@@ -1079,6 +1311,7 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JTextField txtReadID;
     private javax.swing.JTextField txtReadPermission;
     private javax.swing.JTextField txtReadSecondName;
+    private javax.swing.JTextField txtReadTakings;
     private javax.swing.JTextField txtReadUsername;
     private javax.swing.JTextField txtTotal;
     private javax.swing.JTextField txtUpdateFirstName;

@@ -27,6 +27,7 @@ public class ProductController extends Controller {
             queriedProduct.setName(productName);
             queriedProduct.setImage(rs.getString("Image Path"));
             queriedProduct.setPrice(rs.getString("Price"));
+            queriedProduct.setID(rs.getString("ID"));
         }
         catch (SQLException e)
         {
@@ -82,7 +83,7 @@ public class ProductController extends Controller {
         }
     }
     
-    public static ArrayList<String> retrieveProducts()
+    public static ArrayList<String> retrieveProductNames()
     {
         ArrayList<String> products = new ArrayList<>();
         
@@ -98,8 +99,33 @@ public class ProductController extends Controller {
         }
         catch (SQLException e)
         {
-            System.out.println("in retrieveProducts(): " + e);
+            System.out.println("in retrieveProductNames(): " + e);
         }
         return products;
+    }
+    
+    public static ArrayList<Product> retrieveProducts()
+    {
+        ArrayList<Product> productList = new ArrayList<>();
+        try
+        {
+            Statement myStatement = con.createStatement();
+            ResultSet rs = myStatement.executeQuery("SELECT * FROM Products");
+            
+            while (rs.next())
+            {
+                Product nextProduct = new Product();
+                nextProduct.setName(rs.getString("ProductName"));
+                nextProduct.setImage(rs.getString("ImagePath"));
+                nextProduct.setPrice(rs.getString("Price"));
+                
+                productList.add(nextProduct);
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("in retrieveProducts(): " + e);
+        }
+        return productList;
     }
 }

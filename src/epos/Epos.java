@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epos;
 
-/**
- *
- * @author 30303058
- */
 public class Epos {
     private static int customersServed = 0;
     private static double averageSale = 0.00;
