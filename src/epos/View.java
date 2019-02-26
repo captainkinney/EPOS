@@ -1021,6 +1021,20 @@ public final class View extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRestartActionPerformed
 
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        user.setFirstName("");
+        user.setSecondName("");
+        user.setUsername("");
+        user.setID("");
+        
+        epos.setAverageSale(0.00);
+        epos.setCustomersServed(0);
+        epos.setMaximumSale(0.00);
+        epos.setMinimumSale(0.00);
+        epos.setTotalTakings(0.00);
+        
+        epos.transactionList.clear();
+        epos.priceList.clear();
+        epos.checkoutList.clear();
         login();
     }//GEN-LAST:event_btnLogOutActionPerformed
 
