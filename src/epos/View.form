@@ -61,24 +61,19 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel29" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel31" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="txtUserPermission" linkSize="3" min="-2" pref="112" max="-2" attributes="0"/>
-                                  <Component id="txtUserFirstName" linkSize="3" pref="96" max="32767" attributes="0"/>
-                                  <Component id="txtUserSecondName" linkSize="3" max="32767" attributes="0"/>
-                                  <Component id="txtUserID" linkSize="3" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="txtUserUsername" linkSize="3" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="btnLogOut" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel29" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel31" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="txtUserPermission" linkSize="3" min="-2" pref="112" max="-2" attributes="0"/>
+                          <Component id="txtUserFirstName" linkSize="3" pref="96" max="32767" attributes="0"/>
+                          <Component id="txtUserSecondName" linkSize="3" max="32767" attributes="0"/>
+                          <Component id="txtUserID" linkSize="3" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtUserUsername" linkSize="3" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace pref="671" max="32767" attributes="0"/>
                   </Group>
@@ -112,9 +107,7 @@
                           <Component id="jLabel31" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtUserPermission" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="316" max="32767" attributes="0"/>
-                      <Component id="btnLogOut" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace pref="350" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -169,14 +162,6 @@
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="btnLogOut">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Log Out"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLogOutActionPerformed"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>
