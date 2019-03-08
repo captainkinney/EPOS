@@ -79,7 +79,7 @@ public final class UserController extends Controller {
             rs.next();
             User.setFirstName(rs.getString("FirstName"));
             User.setSecondName(rs.getString("SecondName"));
-            User.setUsername(username);
+            User.setUsername(rs.getString("Username"));
             User.setPassword(rs.getString("Password"));
             User.setPermission(rs.getString("Permission"));
             User.setID(rs.getString("ID"));

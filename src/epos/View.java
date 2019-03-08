@@ -49,7 +49,6 @@ public final class View extends javax.swing.JFrame {
         txtUserUsername = new javax.swing.JTextField();
         jLabel31 = new javax.swing.JLabel();
         txtUserPermission = new javax.swing.JTextField();
-        btnLogOut = new javax.swing.JButton();
         pnlSales = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -62,7 +61,7 @@ public final class View extends javax.swing.JFrame {
         txtTotal = new javax.swing.JTextField();
         txtMaximum = new javax.swing.JTextField();
         pnlManagerTools = new javax.swing.JPanel();
-        pnlManageEPOS = new javax.swing.JTabbedPane();
+        tabStats = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -162,13 +161,6 @@ public final class View extends javax.swing.JFrame {
 
         txtUserPermission.setEditable(false);
 
-        btnLogOut.setText("Log Out");
-        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLogOutActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnlUserLayout = new javax.swing.GroupLayout(pnlUser);
         pnlUser.setLayout(pnlUserLayout);
         pnlUserLayout.setHorizontalGroup(
@@ -176,21 +168,18 @@ public final class View extends javax.swing.JFrame {
             .addGroup(pnlUserLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlUserLayout.createSequentialGroup()
-                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel29)
-                            .addComponent(jLabel31))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtUserPermission, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtUserFirstName, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                            .addComponent(txtUserSecondName)
-                            .addComponent(txtUserID)
-                            .addComponent(txtUserUsername)))
-                    .addComponent(btnLogOut))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel29)
+                    .addComponent(jLabel31))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtUserPermission, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUserFirstName, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                    .addComponent(txtUserSecondName)
+                    .addComponent(txtUserID)
+                    .addComponent(txtUserUsername))
                 .addContainerGap(671, Short.MAX_VALUE))
         );
 
@@ -219,9 +208,7 @@ public final class View extends javax.swing.JFrame {
                 .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel31)
                     .addComponent(txtUserPermission, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 316, Short.MAX_VALUE)
-                .addComponent(btnLogOut)
-                .addContainerGap())
+                .addContainerGap(350, Short.MAX_VALUE))
         );
 
         tabMain.addTab("User Details", pnlUser);
@@ -393,7 +380,7 @@ public final class View extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pnlManageEPOS.addTab("Read Users", jPanel1);
+        tabStats.addTab("Read Users", jPanel1);
 
         jLabel13.setText("First Name:");
 
@@ -480,7 +467,7 @@ public final class View extends javax.swing.JFrame {
                 .addContainerGap(156, Short.MAX_VALUE))
         );
 
-        pnlManageEPOS.addTab("Create Users", jPanel2);
+        tabStats.addTab("Create Users", jPanel2);
 
         listManagerUpdate.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -575,7 +562,7 @@ public final class View extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pnlManageEPOS.addTab("Update Users", jPanel3);
+        tabStats.addTab("Update Users", jPanel3);
 
         jLabel22.setText("All Users");
 
@@ -617,7 +604,7 @@ public final class View extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pnlManageEPOS.addTab("Delete Users", jPanel4);
+        tabStats.addTab("Delete Users", jPanel4);
 
         jLabel23.setText("Remove Product");
 
@@ -709,7 +696,7 @@ public final class View extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pnlManageEPOS.addTab("Manage EPOS", jPanel5);
+        tabStats.addTab("Manage EPOS", jPanel5);
 
         btnRestart.setText("Restart System");
         btnRestart.addActionListener(new java.awt.event.ActionListener() {
@@ -725,7 +712,7 @@ public final class View extends javax.swing.JFrame {
             .addGroup(pnlManagerToolsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlManagerToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlManageEPOS)
+                    .addComponent(tabStats)
                     .addGroup(pnlManagerToolsLayout.createSequentialGroup()
                         .addComponent(btnRestart)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -737,7 +724,7 @@ public final class View extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(btnRestart)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlManageEPOS)
+                .addComponent(tabStats)
                 .addContainerGap())
         );
 
@@ -966,7 +953,10 @@ public final class View extends javax.swing.JFrame {
 
     private void btnCancelOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelOrderActionPerformed
         cost = 0.00;
-        listOrder.setModel(new DefaultListModel());
+        txtOrderCost.setText("£0.00");
+        listModel = new DefaultListModel();
+        listOrder.setModel(listModel);
+        
     }//GEN-LAST:event_btnCancelOrderActionPerformed
 
     private void btnRemoveLastItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveLastItemActionPerformed
@@ -1020,24 +1010,6 @@ public final class View extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnRestartActionPerformed
 
-    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
-        user.setFirstName("");
-        user.setSecondName("");
-        user.setUsername("");
-        user.setID("");
-        
-        epos.setAverageSale(0.00);
-        epos.setCustomersServed(0);
-        epos.setMaximumSale(0.00);
-        epos.setMinimumSale(0.00);
-        epos.setTotalTakings(0.00);
-        
-        epos.transactionList.clear();
-        epos.priceList.clear();
-        epos.checkoutList.clear();
-        login();
-    }//GEN-LAST:event_btnLogOutActionPerformed
-
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1089,6 +1061,7 @@ public final class View extends javax.swing.JFrame {
         if (dialog == javax.swing.JOptionPane.OK_OPTION)
         {
             String username = loginField.getText().trim();
+            System.out.println("Entered: " + username);
             String password = passwordField.getText().trim();
             
             user = UserController.retrieveDetails(username);
@@ -1121,6 +1094,8 @@ public final class View extends javax.swing.JFrame {
             tabMain.remove(pnlManagerTools);
         }
         
+        String username = user.getUsername();
+        
         txtUserFirstName.setText(user.getFirstName());
         txtUserSecondName.setText(user.getSecondName());
         txtUserID.setText(user.getID());
@@ -1129,6 +1104,10 @@ public final class View extends javax.swing.JFrame {
         
         updateRecords();
         updateManagerTools();
+
+        // Prevents username overwrite in updateManagerTools();
+        user.setUsername(username);
+        System.out.println("Username: " + user.getUsername());
         
         this.setVisible(true);
     }
@@ -1266,6 +1245,26 @@ public final class View extends javax.swing.JFrame {
         epos.setMinimumSale(lowest);
         epos.setTotalTakings(total);
         
+        /*  Implementation of provided algorithms for assessment.
+            Above implementation is preferable.
+        double lowest = epos.transactionList[0];
+        for (int i = 0; i <= epos.transactionList.size() - 1; i++)
+        {
+            if (epos.transactionList[i] < lowest)
+            {
+                lowest = epos.transactionList[i];
+            }
+        }
+        
+        double highest = 0;
+        for (int i = 0; i <= epos.transactionList.size() - 1; i++)
+        {
+            if (epos.transactionList[i] > highest)
+            {
+                highest = epos.transactionList[i];
+            }
+        }
+        */
         // Submits the most recent sale.
         SalesController.submitSale(user, epos.transactionList.get(epos.transactionList.size() -1));
         updateManagerTools();
@@ -1279,7 +1278,6 @@ public final class View extends javax.swing.JFrame {
     private javax.swing.JButton btnCreateClear;
     private javax.swing.JButton btnDeleteProduct;
     private javax.swing.JButton btnDeleteUser;
-    private javax.swing.JButton btnLogOut;
     private javax.swing.JButton btnRemoveLastItem;
     private javax.swing.JButton btnRestart;
     private javax.swing.JButton btnUpdate;
@@ -1338,13 +1336,13 @@ public final class View extends javax.swing.JFrame {
     private javax.swing.JList<String> listProducts;
     private javax.swing.JPanel pnlButtons;
     private javax.swing.JPanel pnlEPOS;
-    private javax.swing.JTabbedPane pnlManageEPOS;
     private javax.swing.JPanel pnlManagerTools;
     private javax.swing.JPanel pnlSales;
     private javax.swing.JPanel pnlUser;
     private javax.swing.JScrollPane scrollButtons;
     private javax.swing.JSpinner spnQuantity;
     private javax.swing.JTabbedPane tabMain;
+    private javax.swing.JTabbedPane tabStats;
     private javax.swing.JTextField txtAverageSale;
     private javax.swing.JTextField txtCreateFirstName;
     private javax.swing.JPasswordField txtCreatePassword;
