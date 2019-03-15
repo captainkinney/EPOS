@@ -1,9 +1,8 @@
 package epos;
 
-/**
- *
- * @author 30303058
- */
+// Product object for passing information
+// to the product / sales controllers.
+
 public class Product {
     private String name = "n/a";
     private String image = "n/a";

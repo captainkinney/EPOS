@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- *
- * @author 30303058
- */
+// Superclass for controllers as they both require the getConenction() method.
+
 public class Controller {
     public static Connection getConnection()
     {
+        // Connects to database.
+        
         Connection con = null;
         try
         {

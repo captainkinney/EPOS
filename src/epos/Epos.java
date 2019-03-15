@@ -2,6 +2,10 @@ package epos;
 
 import java.util.ArrayList;
 
+// Keeps track of the EPOS session.
+// holds statistics in order to checkout
+// and create a user report.
+
 public class Epos {
     private static int customersServed = 0;
     private static double averageSale = 0.00;

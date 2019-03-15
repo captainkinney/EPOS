@@ -18,12 +18,17 @@ import javax.swing.ImageIcon;
 
 public final class View extends javax.swing.JFrame {
 
+    // Global 'session' variables.
+    // user holds information about the current user.
     public static User user;
+    // epos holds information about session sales etc
     public static Epos epos;
     
+    // Listmodel used to track the current order.
     public static DefaultListModel listModel = new DefaultListModel();
     public static double cost = 0.0;
     
+    // Controllers for relevant tables in the database.
     public static ProductController productController = new ProductController();
     public static UserController userController = new UserController();
     
@@ -851,6 +856,8 @@ public final class View extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void listManagerReadValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listManagerReadValueChanged
+        //Updates the read user fields based on the current selected user in the list.
+        
         String username = listManagerRead.getSelectedValue();
         User selectedUser = UserController.retrieveDetails(username);
         
@@ -860,6 +867,7 @@ public final class View extends javax.swing.JFrame {
         txtReadUsername.setText(selectedUser.getUsername());
         txtReadPermission.setText(selectedUser.getPermission());
         
+        // Gets the selected user's total takings from the sales table.
         double total = SalesController.retrieveTotal(user.getUsername());
         
         String stringTotal = (String) String.format("%.2f", total);
@@ -868,6 +876,7 @@ public final class View extends javax.swing.JFrame {
     }//GEN-LAST:event_listManagerReadValueChanged
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
+        // Creates a new User object to insert into the users table.
         User newUser = new User();
         User.setFirstName(txtCreateFirstName.getText());
         User.setSecondName(txtCreateSecondName.getText());
@@ -875,11 +884,13 @@ public final class View extends javax.swing.JFrame {
         User.setUsername(txtCreateUsername.getText());
         User.setPermission((String)cboCreatePermission.getSelectedItem());
         
+        // inserts user, and then updates the CRUD features of the app.
         UserController.insertUser(newUser);
         updateManagerTools();
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void btnAddProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProductActionPerformed
+        // Creates a new Product object to insert into the products table.
         Product product = new Product();
         
         String name = txtProductName.getText();
@@ -890,6 +901,7 @@ public final class View extends javax.swing.JFrame {
         product.setImage(image);
         product.setPrice(price);
         
+        // inserts product and updates the CRUD features of the app.
         ProductController.insertProduct(product);   
         updateManagerTools();
         
@@ -899,6 +911,9 @@ public final class View extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddProductActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // Creates a new User object and then replaces the old user in the users table
+        // with the updated fields.
+        
         String username = listManagerUpdate.getSelectedValue();
         User updateUser = new User();
         
@@ -914,11 +929,14 @@ public final class View extends javax.swing.JFrame {
         updateUser.setUsername(newUsername);
         updateUser.setPermission(permission);
 
+        // updates the users table and updates the CRUD features of the app.
         UserController.updateUser(username, updateUser);
         updateManagerTools();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void listManagerUpdateValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listManagerUpdateValueChanged
+        // Changes the update user screen when the selected list item is changed.
+        
         String username = listManagerUpdate.getSelectedValue();
         User selectedUser = UserController.retrieveDetails(username);
         
@@ -930,6 +948,8 @@ public final class View extends javax.swing.JFrame {
     }//GEN-LAST:event_listManagerUpdateValueChanged
 
     private void btnDeleteProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteProductActionPerformed
+        // Deletes the selected item from the products table and resets CRUD features.
+        
         String selectedItem = listProducts.getSelectedValue();
         
         ProductController.deleteProduct(selectedItem);
@@ -937,6 +957,8 @@ public final class View extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteProductActionPerformed
 
     private void btnDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteUserActionPerformed
+        // Deletes the selected user from the products table and resets CRUD features.
+        
         String username = listManagerDelete.getSelectedValue();
         
         UserController.deleteUser(username);
@@ -944,6 +966,8 @@ public final class View extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteUserActionPerformed
 
     private void btnCreateClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateClearActionPerformed
+        // Clears the fields in the create username screen.
+        
         txtCreateFirstName.setText("");
         txtCreateSecondName.setText("");
         txtCreateUsername.setText("");
@@ -952,6 +976,8 @@ public final class View extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCreateClearActionPerformed
 
     private void btnCancelOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelOrderActionPerformed
+        // Initialises the cost and order variables.
+        
         cost = 0.00;
         txtOrderCost.setText("£0.00");
         listModel = new DefaultListModel();
@@ -960,6 +986,8 @@ public final class View extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelOrderActionPerformed
 
     private void btnRemoveLastItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveLastItemActionPerformed
+        // Removes the last item from every relevant array, and subtracts the cost.
+        
         try
         {
             cost -= epos.priceList.get( epos.priceList.size() -1);
@@ -967,6 +995,7 @@ public final class View extends javax.swing.JFrame {
             listModel.remove( listModel.size() - 1);
             epos.priceList.remove( epos.priceList.size() -1);
             
+            // Updates the order to display the changes.
             updateOrder();
             
         }
@@ -978,15 +1007,22 @@ public final class View extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRemoveLastItemActionPerformed
 
     private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
+        // Checks out order and displays invoice.
+        
+        // Checks that there is at least one item in the cart.
         if (epos.priceList.size() > 0)
         {
+            // checkout() updates the epos variables, and sales table.
             checkout();
+            // Dispalys invoice.
             JOptionPane.showMessageDialog(null, "Order complete.\n Total price: £" + String.format("%.2f", cost));
+            // initialises the order.
             listModel.removeAllElements();
             txtOrderCost.setText("£0.00");
             cost = 0.00;
             epos.priceList.clear();
             epos.checkoutList.clear();
+            // updates CRUD.
             updateManagerTools();
             updateRecords();
         }
@@ -994,6 +1030,9 @@ public final class View extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCheckoutActionPerformed
 
     private void btnRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestartActionPerformed
+        // Restarts the system by clearing the sales table.
+        
+        // Displays confirmation box to prevent accidental resets.
         JLabel confirm = new JLabel("Resetting the system will delete all sales records. Are you sure?");
         Object[] guiElements = {confirm};
         int choice = JOptionPane.showConfirmDialog(null, guiElements, "Reset System",
@@ -1002,9 +1041,12 @@ public final class View extends javax.swing.JFrame {
         
         if (choice == javax.swing.JOptionPane.OK_OPTION)
         {
+            // clears the sales table.
             SalesController.resetSystem();
             JOptionPane.showMessageDialog(null, "System Reset.");
+            // clears the list of transactions.
             epos.transactionList.clear();
+            // updates CRUD.
             updateManagerTools();
             updateRecords();
         }
@@ -1044,9 +1086,11 @@ public final class View extends javax.swing.JFrame {
     
     public static User loginDialog()
     {
+        // initialises global user and epos variables.
         user = new User();
         epos = new Epos();
         
+        // Displays login dialog. accepts username and password.
         JLabel loginLabel = new JLabel("Username:");
         JTextField loginField = new JTextField();
         JLabel passwordLabel = new JLabel("Password:");
@@ -1114,6 +1158,8 @@ public final class View extends javax.swing.JFrame {
     
     public void updateRecords()
     {
+        // Updates the fields to the correct value.
+        
         txtCustomersServed.setText(String.valueOf(epos.getCustomersServed()));
         txtTotal.setText("£" + String.format("%.2f", epos.getTotalTakings()));
         txtMaximum.setText("£" + String.format("%.2f", epos.getMaximumSale()));
@@ -1123,30 +1169,42 @@ public final class View extends javax.swing.JFrame {
     
     public void updateManagerTools()
     {
+        // Updates the CRUD features in the app by querying the database.
+        
+        // Creates a list to store usernames in.
         ArrayList<String> userList = UserController.retrieveUsernames();
         
         DefaultListModel listModel = new DefaultListModel();
         for (String member : userList)
         {
+            // Adds each username to a listmodel
             listModel.addElement(member);
         }
+        
+        // Sets the listboxes in the CRUD screens to the listmodel of usernames.
         listManagerRead.setModel(listModel);
         listManagerDelete.setModel(listModel);
         listManagerUpdate.setModel(listModel);
         
+        // Creates a list to store product names in.
         ArrayList<String> productList = ProductController.retrieveProductNames();
         
         listModel = new DefaultListModel();
         for (String member: productList)
         {
+            // Adds each product name to a listmodel
             listModel.addElement(member);
         }
+        
+        // Sets the product lists to the correct listmodel.
         listProducts.setModel(listModel);
         
+        // Sets the selected user to the first user.
         listManagerRead.setSelectedIndex(0);
         listManagerDelete.setSelectedIndex(0);
         listManagerUpdate.setSelectedIndex(0);
         
+        // Sets the fields for the selected user.
         String selectedUser = (String)listManagerRead.getSelectedValue();
         double total = SalesController.retrieveTotal(selectedUser);
         String stringTotal = String.format("%.2f", total);
@@ -1157,11 +1215,16 @@ public final class View extends javax.swing.JFrame {
     
     public void updateEPOS()
     {
+        // Creates a button for each product programmatically.
+        
+        // Removes all existing buttons.
         pnlButtons.removeAll();
         
+        // Initial button location.
         int x = 15;
         int y = 15;
         
+        // Determines image folder location.
         String workingDir = System.getProperty("user.dir");
         String filepath = workingDir + "\\Data\\imgs\\";
         BufferedImage image;
@@ -1169,7 +1232,7 @@ public final class View extends javax.swing.JFrame {
         
         for (Product item : ProductController.retrieveProducts())
         {
-            // Icon creation.
+            // Creates an icon for the button.
             try
             { 
                 image = ImageIO.read(new File(filepath + item.getImage()));
@@ -1180,16 +1243,16 @@ public final class View extends javax.swing.JFrame {
             // Button creation
             JButton button = new JButton();
             
-            // ActionListener to add item to checkout list when pressed.
+            // ActionListener is assigned to each button so as to identify which button is pressed.
             button.addActionListener(e -> EPOSButtonPressed(item));
             
-            // Button configuration.
+            // Sets the appearance of the button.
             button.setSize(200, 100);
             button.setIcon(icon);
             double price = Double.parseDouble(item.getPrice());
             button.setText("<html><center>" + item.getName() + ",<br>£" + String.format("%.2f", price) + "</center></html>");
             
-            // Positioning
+            // Positions the button correctly.
             button.setLocation(x, y);
             x += 215;
             if (x == 660)
@@ -1197,36 +1260,52 @@ public final class View extends javax.swing.JFrame {
                 x = 15;
                 y += 125;
             }
+            // Adds the button to the button panel.
             pnlButtons.add(button);
         }
     }
     
     public void EPOSButtonPressed(Product item)
     {
+        // Adds the item pressed to the order.
+        
+        // Gets the quantity
         int quantity = (int)spnQuantity.getValue();
         double price;
         if(quantity > 0)
         {
+            // Adds the item to the listmodel.
             listModel.addElement(item.getName() + " £" + item.getPrice() + " x" + String.valueOf(quantity));
             price = Double.parseDouble(item.getPrice()) * quantity;
+            // adds the cost to the pricelist.
             epos.priceList.add(price);
             cost += price;
             
+            // updates the order.
             updateOrder();
         }
     }
     
     public void updateOrder()
     {
+        // updates the order screen.
+        
+        // sets the cost label appropriately.
         txtOrderCost.setText("£" + String.format("%.2f", cost));
+        // sets the order listbox to the correct listmodel.
         listOrder.setModel(listModel);
     }
     
     public void checkout()
     {
+        // Checks out order and adds transaction to transactionlist.
+        
+        // gets price.
         String numericalPrice = txtOrderCost.getText().substring(1);
+        // adds price to transactionlist.
         epos.transactionList.add( Double.parseDouble(numericalPrice) );
         
+        // Calculates report values.
         double highest = epos.transactionList.get(0);
         double lowest = epos.transactionList.get(0);
         double total = 0.0;
@@ -1239,14 +1318,16 @@ public final class View extends javax.swing.JFrame {
             total += member;
             average = total / epos.transactionList.size();
         }
+        
+        // sets epos variables to keep track of statistics.
         epos.setCustomersServed(epos.transactionList.size());
         epos.setAverageSale(average);
         epos.setMaximumSale(highest);
         epos.setMinimumSale(lowest);
         epos.setTotalTakings(total);
         
-        /*  Implementation of provided algorithms for assessment.
-            Above implementation is preferable.
+        /*  //Implementation of provided algorithms for assessment.
+            //Above implementation is preferable.
         double lowest = epos.transactionList[0];
         for (int i = 0; i <= epos.transactionList.size() - 1; i++)
         {
@@ -1266,7 +1347,11 @@ public final class View extends javax.swing.JFrame {
         }
         */
         // Submits the most recent sale.
+        
+        // submits sale to sales table.
         SalesController.submitSale(user, epos.transactionList.get(epos.transactionList.size() -1));
+        
+        // updates CRUD.
         updateManagerTools();
     }
 

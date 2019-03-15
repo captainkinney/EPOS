@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epos;
 
-/**
- *
- * @author 30303058
- */
+// User class holds the information about
+// the user currently logged into the
+// system.
+
 public class User {
     private static String firstName = "";
     private static String secondName = "";
