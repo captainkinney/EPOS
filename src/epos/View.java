@@ -1458,3 +1458,4 @@ public final class View extends javax.swing.JFrame {
     private javax.swing.JTextField txtUserUsername;
     // End of variables declaration//GEN-END:variables
 }
+
